@@ -2,26 +2,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
-
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.5.7</version>
 		<relativePath/>
 	</parent>
-
 	<groupId>com.SAFE-MAIL</groupId>
 	<artifactId>SAFE-MAIL</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>SAFE-MAIL</name>
-	<description>Spring Boot Email Microservice</description>
-
+	<description>Spring Boot Email Microservice with ThingSpeak Integration</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
-
 	<dependencies>
 		<!-- Spring Web -->
 		<dependency>
@@ -50,6 +45,20 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
+		<!-- Configuration Processor for application.properties -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- Jackson for JSON processing (already included in spring-boot-starter-web) -->
+		<!-- But explicitly adding for clarity -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
 		<!-- Testing -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -60,11 +69,18 @@
 
 	<build>
 		<plugins>
-
 			<!-- Spring Boot Maven Plugin -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 
 			<!-- Maven Compiler Plugin -->
@@ -77,27 +93,29 @@
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 						</path>
+						<path>
+							<groupId>org.springframework.boot</groupId>
+							<artifactId>spring-boot-configuration-processor</artifactId>
+						</path>
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 
-			<!-- ✅ Google Jib Plugin for building Docker images -->
+			<!-- Google Jib Plugin for building Docker images -->
 			<plugin>
 				<groupId>com.google.cloud.tools</groupId>
 				<artifactId>jib-maven-plugin</artifactId>
 				<version>3.4.0</version>
 				<configuration>
-					<!-- ✅ Use Google Distroless image (lightweight and reliable) -->
+					<!-- Use Google Distroless image (lightweight and reliable) -->
 					<from>
 						<image>gcr.io/distroless/java17-debian12</image>
 					</from>
-
-					<!-- ✅ Output image name -->
+					<!-- Output image name -->
 					<to>
 						<image>safe-mail:latest</image>
 					</to>
-
-					<!-- ✅ Container configuration -->
+					<!-- Container configuration -->
 					<container>
 						<mainClass>com.SAFE_MAIL.SAFE_MAIL.SafeMailApplication</mainClass>
 						<ports>
@@ -110,8 +128,6 @@
 					</container>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
-
 </project>
