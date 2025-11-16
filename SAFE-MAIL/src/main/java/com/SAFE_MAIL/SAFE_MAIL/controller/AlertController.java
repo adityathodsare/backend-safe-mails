@@ -15,131 +15,97 @@ public class AlertController {
 
     private final EmailService emailService;
 
-    @GetMapping("/fire")
-    public ResponseEntity<Map<String, String>> sendFireAlert(
-            @RequestParam(required = false) String temperature,
-            @RequestParam(required = false) String location,
-            @RequestParam(required = false) String vehicleId,
-            @RequestParam String recipients) {
-
-        Map<String, String> sensorData = new HashMap<>();
-        sensorData.put("temperature", temperature != null ? temperature : "N/A");
-        sensorData.put("location", location != null ? location : "N/A");
-        sensorData.put("vehicleId", vehicleId != null ? vehicleId : "Unknown");
-
-        emailService.sendFireAlert(recipients.split(","), sensorData);
-        return ResponseEntity.ok(Map.of("status", "Fire alert sent successfully"));
-    }
-
-    @GetMapping("/gas-leak")
-    public ResponseEntity<Map<String, String>> sendGasLeakAlert(
-            @RequestParam(required = false) String gasLevel,
-            @RequestParam(required = false) String gasType,
-            @RequestParam(required = false) String location,
-            @RequestParam(required = false) String vehicleId,
-            @RequestParam String recipients) {
-
-        Map<String, String> sensorData = new HashMap<>();
-        sensorData.put("gasLevel", gasLevel != null ? gasLevel : "N/A");
-        sensorData.put("gasType", gasType != null ? gasType : "N/A");
-        sensorData.put("location", location != null ? location : "N/A");
-        sensorData.put("vehicleId", vehicleId != null ? vehicleId : "Unknown");
-
-        emailService.sendGasLeakAlert(recipients.split(","), sensorData);
-        return ResponseEntity.ok(Map.of("status", "Gas leak alert sent successfully"));
-    }
-
+    // 1. Alcohol Detected Alert
     @GetMapping("/alcohol")
     public ResponseEntity<Map<String, String>> sendAlcoholAlert(
-            @RequestParam(required = false) String alcoholLevel,
-            @RequestParam(required = false) String driverName,
-            @RequestParam(required = false) String location,
+            @RequestParam String recipients,
             @RequestParam(required = false) String vehicleId,
-            @RequestParam String recipients) {
+            @RequestParam(required = false) String location) {
 
-        Map<String, String> sensorData = new HashMap<>();
-        sensorData.put("alcoholLevel", alcoholLevel != null ? alcoholLevel : "N/A");
-        sensorData.put("driverName", driverName != null ? driverName : "Unknown");
-        sensorData.put("location", location != null ? location : "N/A");
-        sensorData.put("vehicleId", vehicleId != null ? vehicleId : "Unknown");
+        Map<String, String> alertData = new HashMap<>();
+        alertData.put("vehicleId", vehicleId != null ? vehicleId : "Unknown Vehicle");
+        alertData.put("location", location != null ? location : "Location not available");
 
-        emailService.sendAlcoholAlert(recipients.split(","), sensorData);
+        emailService.sendAlcoholAlert(recipients.split(","), alertData);
         return ResponseEntity.ok(Map.of("status", "Alcohol alert sent successfully"));
     }
 
-    @GetMapping("/tilt-accident")
-    public ResponseEntity<Map<String, String>> sendTiltAccidentAlert(
-            @RequestParam(required = false) String tiltAngle,
-            @RequestParam(required = false) String speed,
-            @RequestParam(required = false) String location,
+    // 2. Accident Detected Alert
+    @GetMapping("/accident")
+    public ResponseEntity<Map<String, String>> sendAccidentAlert(
+            @RequestParam String recipients,
             @RequestParam(required = false) String vehicleId,
-            @RequestParam String recipients) {
+            @RequestParam(required = false) String location) {
 
-        Map<String, String> sensorData = new HashMap<>();
-        sensorData.put("tiltAngle", tiltAngle != null ? tiltAngle : "N/A");
-        sensorData.put("speed", speed != null ? speed : "N/A");
-        sensorData.put("location", location != null ? location : "N/A");
-        sensorData.put("vehicleId", vehicleId != null ? vehicleId : "Unknown");
+        Map<String, String> alertData = new HashMap<>();
+        alertData.put("vehicleId", vehicleId != null ? vehicleId : "Unknown Vehicle");
+        alertData.put("location", location != null ? location : "Location not available");
 
-        emailService.sendTiltAccidentAlert(recipients.split(","), sensorData);
-        return ResponseEntity.ok(Map.of("status", "Tilt/Accident alert sent successfully"));
+        emailService.sendAccidentAlert(recipients.split(","), alertData);
+        return ResponseEntity.ok(Map.of("status", "Accident alert sent successfully"));
     }
 
-    @GetMapping("/passenger-overload")
-    public ResponseEntity<Map<String, String>> sendPassengerOverloadAlert(
-            @RequestParam(required = false) String passengerCount,
-            @RequestParam(required = false) String maxCapacity,
-            @RequestParam(required = false) String location,
+    // 3. Fire Detected Alert
+    @GetMapping("/fire")
+    public ResponseEntity<Map<String, String>> sendFireAlert(
+            @RequestParam String recipients,
             @RequestParam(required = false) String vehicleId,
-            @RequestParam String recipients) {
+            @RequestParam(required = false) String location) {
 
-        Map<String, String> sensorData = new HashMap<>();
-        sensorData.put("passengerCount", passengerCount != null ? passengerCount : "N/A");
-        sensorData.put("maxCapacity", maxCapacity != null ? maxCapacity : "N/A");
-        sensorData.put("location", location != null ? location : "N/A");
-        sensorData.put("vehicleId", vehicleId != null ? vehicleId : "Unknown");
+        Map<String, String> alertData = new HashMap<>();
+        alertData.put("vehicleId", vehicleId != null ? vehicleId : "Unknown Vehicle");
+        alertData.put("location", location != null ? location : "Location not available");
 
-        emailService.sendPassengerOverloadAlert(recipients.split(","), sensorData);
-        return ResponseEntity.ok(Map.of("status", "Passenger overload alert sent successfully"));
+        emailService.sendFireAlert(recipients.split(","), alertData);
+        return ResponseEntity.ok(Map.of("status", "Fire alert sent successfully"));
     }
 
-    @GetMapping("/signal-break")
-    public ResponseEntity<Map<String, String>> sendSignalBreakAlert(
-            @RequestParam(required = false) String signalStrength,
-            @RequestParam(required = false) String lastKnownLocation,
+    // 4. Gas CNG Leak Alert
+    @GetMapping("/gas-leak")
+    public ResponseEntity<Map<String, String>> sendGasLeakAlert(
+            @RequestParam String recipients,
             @RequestParam(required = false) String vehicleId,
-            @RequestParam String recipients) {
+            @RequestParam(required = false) String location) {
 
-        Map<String, String> sensorData = new HashMap<>();
-        sensorData.put("signalStrength", signalStrength != null ? signalStrength : "N/A");
-        sensorData.put("lastKnownLocation", lastKnownLocation != null ? lastKnownLocation : "N/A");
-        sensorData.put("vehicleId", vehicleId != null ? vehicleId : "Unknown");
+        Map<String, String> alertData = new HashMap<>();
+        alertData.put("vehicleId", vehicleId != null ? vehicleId : "Unknown Vehicle");
+        alertData.put("location", location != null ? location : "Location not available");
 
-        emailService.sendSignalBreakAlert(recipients.split(","), sensorData);
-        return ResponseEntity.ok(Map.of("status", "Signal break alert sent successfully"));
+        emailService.sendGasLeakAlert(recipients.split(","), alertData);
+        return ResponseEntity.ok(Map.of("status", "Gas leak alert sent successfully"));
     }
 
-    @GetMapping("/emergency")
-    public ResponseEntity<Map<String, String>> sendEmergencyAlert(
-            @RequestParam String emergencyType,
-            @RequestParam(required = false) String description,
-            @RequestParam(required = false) String location,
+    // 5. Temperature Warning Alert
+    @GetMapping("/temperature")
+    public ResponseEntity<Map<String, String>> sendTemperatureAlert(
+            @RequestParam String recipients,
             @RequestParam(required = false) String vehicleId,
-            @RequestParam String recipients) {
+            @RequestParam(required = false) String location) {
 
-        Map<String, String> sensorData = new HashMap<>();
-        sensorData.put("emergencyType", emergencyType);
-        sensorData.put("description", description != null ? description : "N/A");
-        sensorData.put("location", location != null ? location : "N/A");
-        sensorData.put("vehicleId", vehicleId != null ? vehicleId : "Unknown");
+        Map<String, String> alertData = new HashMap<>();
+        alertData.put("vehicleId", vehicleId != null ? vehicleId : "Unknown Vehicle");
+        alertData.put("location", location != null ? location : "Location not available");
 
-        emailService.sendEmergencyAlert(recipients.split(","), sensorData);
-        return ResponseEntity.ok(Map.of("status", "Emergency alert sent successfully"));
+        emailService.sendTemperatureAlert(recipients.split(","), alertData);
+        return ResponseEntity.ok(Map.of("status", "Temperature alert sent successfully"));
     }
 
+    // 6. Order Confirmation Alert
+    @GetMapping("/confirmation")
+    public ResponseEntity<Map<String, String>> sendConfirmationAlert(
+            @RequestParam String recipients,
+            @RequestParam(required = false) String vehicleId) {
+
+        Map<String, String> alertData = new HashMap<>();
+        alertData.put("vehicleId", vehicleId != null ? vehicleId : "Your Vehicle");
+
+        emailService.sendConfirmationAlert(recipients.split(","), alertData);
+        return ResponseEntity.ok(Map.of("status", "Confirmation alert sent successfully"));
+    }
+
+    // Test endpoint
     @GetMapping("/test")
-    public ResponseEntity<Map<String, String>> testEmail(
-            @RequestParam String recipients) {
+    public ResponseEntity<Map<String, String>> testEmail(@RequestParam String recipients) {
         emailService.sendTestEmail(recipients.split(","));
         return ResponseEntity.ok(Map.of("status", "Test email sent successfully"));
     }
